@@ -6,10 +6,11 @@ import RelatedProduct from '../components/RelatedProduct';
 
 const Product = () => {
   const { productId } = useParams();
-  const { products, currency, } = useContext(ShopContext);
+  const { products, currency, addToCart } = useContext(ShopContext);
   const [productData, setProductData] = useState(null);
   const [image, setImage] = useState('');
   const [size, setSize] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const product = products.find(item => item._id === productId);
@@ -88,9 +89,21 @@ const Product = () => {
           </div>
 
           {/* Add to Cart */}
-          <button className="w-full md:w-auto bg-black text-white px-8 py-3 rounded-none hover:bg-gray-800 transition-all uppercase text-sm tracking-wider mb-8">
+          <button
+            onClick={() => {
+              if (!size) {
+                setError('Please select a size before adding to cart.');
+              } else {
+                addToCart(productData._id, size);
+                setError('');
+              }
+            }}
+            className="w-full md:w-auto bg-black text-white px-8 py-3 rounded-none hover:bg-gray-800 transition-all uppercase text-sm tracking-wider mb-2"
+          >
             Add to Cart
           </button>
+
+          {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
 
           {/* Extra Info */}
           <div className="space-y-3 text-xs text-gray-500 border-t border-gray-200 pt-6">
