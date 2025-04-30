@@ -1,91 +1,139 @@
-import React from 'react'
-import { useParams } from 'react-router-dom'
-import { useContext } from 'react'
-import ProductItem from '../components/ProductItem'
-import { ShopContext } from '../context/ShopContext'
-import { useEffect, useState } from 'react'
-import { assets } from '../assets/frontend_assets/assets'
- 
+import React, { useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { ShopContext } from '../context/ShopContext';
+import { assets } from '../assets/frontend_assets/assets';
+import RelatedProduct from '../components/RelatedProduct';
 
 const Product = () => {
+  const { productId } = useParams();
+  const { products, currency, } = useContext(ShopContext);
+  const [productData, setProductData] = useState(null);
+  const [image, setImage] = useState('');
+  const [size, setSize] = useState('');
 
-    const {productId} = useParams()
-    const {products,currency} = useContext(ShopContext)
-    const [productData,setProductData]= useState(false)
-    const [image,setImage]= useState('')
-    const [size,setSize]= useState('')
+  useEffect(() => {
+    const product = products.find(item => item._id === productId);
+    if (product) {
+      setProductData(product);
+      setImage(product.image[0]);
+    }
+  }, [productId, products]);
 
-    const fetchProductData = async () => {
-        products.map((item) => {
-        if (item._id === productId){
-            setProductData(item)
-            setImage(item.image[0])   
-            return null
-        }
-    })
-}
-    useEffect(() => {
-        fetchProductData()
-    },[productId,products])
-  return productData ? (
-    <div className='border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100'>
+  if (!productData) return <div className="opacity-0">Loading...</div>;
 
-        <div className='flex gap-12 sm:gap-12 flex-col sm:flex-row'>
+  return (
+    <div className="pt-8 px-4 sm:px-8 lg:px-16 xl:px-24 transition-opacity ease-in duration-500">
+      <div className="flex flex-col lg:flex-row gap-12">
+        {/* Left Side - Images */}
+        <div className="flex-1 flex flex-col lg:flex-row gap-6">
+          {/* Thumbnails */}
+          <div className="flex lg:flex-col gap-3 overflow-auto lg:overflow-visible">
+            {productData.image.map((img, index) => (
+              <img
+                key={index}
+                src={img}
+                alt={productData.name}
+                onClick={() => setImage(img)}
+                className={`w-16 h-20 lg:w-20 lg:h-24 object-cover border rounded-lg cursor-pointer transition ${
+                  image === img ? 'border-black scale-105' : 'border-gray-200 hover:border-gray-300'
+                }`}
+              />
+            ))}
+          </div>
 
-            <div className='flex-1 flex flex-col-reverse gap-3 sm:flex-row'>
-                <div className='flex sm:flex-col overflow-x-auto sm:overflow-y-scroll justify-between sm:justify-normal sm:w-[18.7%] w-full'>
-                    {
-                        productData.image.map((item,index) => (
-                            <img onClick={()=>setImage(item)}src={item} key={index} alt={productData.name} className='w-[24%] sm:w-full sm:mb-3 flex-shrink- cursor-pointer' />
-                        ))
-                    }
-                </div>
-                <div className='w-full sm:w-[80%]'>
-                    <img src={image} alt={productData.name} className='w-full h-auto' />
-                </div> 
-            </div>
-
-            <div className='flex-1'>
-                <h1 className='font-medium text-2xl mt-2'>{productData.name}</h1>
-                <div className='flex items-center gap-1 mt-2'>
-                    <img src={assets.star_icon} alt="" className="w-3 5" />
-                    <img src={assets.star_icon} alt="" className="w-3 5" />
-                    <img src={assets.star_icon} alt="" className="w-3 5" />
-                    <img src={assets.star_icon} alt="" className="w-3 5" />
-                    <img src={assets.star_dull_icon} alt="" className="w-3 5" />
-                    <p className='pl-2'>(122)</p>
-                </div>
-                <p className='mt-5 text-3xl font-medium'>{currency}{productData.price}</p>
-                <p className='mt-5 text-sm text-gray-500 md:w-4/5'>{productData.description}</p>
-                <div className='flex flex-col gap-4 my-8'>
-                    <p>Select Size</p>
-                    <div className='flex gap-2'>
-                        {productData.sizes.map((item,index) => (
-                            <button onClick={()=>setSize(item)} className={`border py-2 px-4 bg-gray-100 ${item === size ? 'border-orange-500' : ''} `} key={index}>{item}</button>)
-                        )}
-                    </div>
-                </div>
-                <button className=' bg-black text-white px-8 py-3 text-sm active:bg-gray-700'>ADD TO CART</button>
-                <hr className='mt-8 sm:w-4/5' />
-                        <div className='text-sm text-gray-500 mt-5 flex flex-col gap-1'>
-                            <p>100% Original Product.</p>
-                            <p>Cash on delivery available on this product.</p>
-                            <p>Easy return and exchange policy within 7 Days.</p>
-                        </div>
-            </div>
+          {/* Main Image */}
+          <div className="w-full">
+            <img
+              src={image}
+              alt={productData.name}
+              className="w-full h-[500px] object-contain rounded-lg bg-gray-50"
+            />
+          </div>
         </div>
-        <div className='mt-20'>
-            <div className='flex'>
-                <b className='border px-5 py-3 text-sm'>Description</b>
-                <p className='border px-5 py-3 text-sm'>Review (122)</p>
+
+        {/* Right Side - Info */}
+        <div className="flex-1 max-w-2xl">
+          <h1 className="text-2xl md:text-3xl font-light tracking-wide mb-3">{productData.name}</h1>
+          <div className="flex items-center gap-1 text-yellow-500 mb-4">
+            {[...Array(4)].map((_, i) => (
+              <img key={i} src={assets.star_icon} alt="star" className="w-4" />
+            ))}
+            <img src={assets.star_dull_icon} alt="star" className="w-4" />
+            <p className="text-xs text-gray-500 pl-2">(122 reviews)</p>
+          </div>
+          <p className="text-xl font-medium text-gray-900 mb-6">
+            {currency}
+            {productData.price}
+          </p>
+          <p className="text-gray-600 text-sm leading-6 mb-8">{productData.description}</p>
+
+          {/* Sizes */}
+          <div className="mb-8">
+            <p className="text-sm font-medium mb-3 uppercase tracking-wider">Select Size</p>
+            <div className="flex flex-wrap gap-2">
+              {productData.sizes.map((s, i) => (
+                <button
+                  key={i}
+                  onClick={() => setSize(s)}
+                  className={`border px-4 py-2 rounded-sm text-sm transition-all ${
+                    size === s
+                      ? 'bg-black border-black text-white'
+                      : 'bg-white border-gray-300 text-gray-700 hover:border-gray-400'
+                  }`}
+                >
+                  {s}
+                </button>
+              ))}
             </div>
-            <div className='flex flex-col gap-4 border px-6 py-6 text-sm text-gray-500'>
-                <p>Product Description</p>
-                <p>More Product Description</p>
+          </div>
+
+          {/* Add to Cart */}
+          <button className="w-full md:w-auto bg-black text-white px-8 py-3 rounded-none hover:bg-gray-800 transition-all uppercase text-sm tracking-wider mb-8">
+            Add to Cart
+          </button>
+
+          {/* Extra Info */}
+          <div className="space-y-3 text-xs text-gray-500 border-t border-gray-200 pt-6">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">✓</span>
+              <p>100% Original Product</p>
             </div>
+            <div className="flex items-center gap-2">
+              <span className="text-lg">🚚</span>
+              <p>Cash on Delivery Available</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-lg">🔄</span>
+              <p>7-Day Easy Return & Exchange</p>
+            </div>
+          </div>
         </div>
+      </div>
+
+      {/* Description / Reviews Tabs */}
+      <div className="mt-20 mb-16">
+        <div className="flex border-b border-gray-200">
+          <button className="px-6 py-3 text-sm font-medium border-t border-x border-gray-200 bg-white text-black tracking-wider">
+            Description
+          </button>
+          <button className="px-6 py-3 text-sm text-gray-500 tracking-wider">Reviews (122)</button>
+        </div>
+        <div className="border border-gray-200 border-t-0 p-6 text-sm text-gray-600 space-y-4 leading-6">
+          <p className="font-medium text-gray-800">Product Description</p>
+          <p>{productData.description}</p>
+        </div>
+      </div>
+
+      {/* Related Products */}
+      <div className="mb-16">
+        <h2 className="text-xl font-light tracking-wide mb-8">You May Also Like</h2>
+        <RelatedProduct
+          category={productData.category}
+          subCategory={productData.subCategory}
+        />
+      </div>
     </div>
-  ) : <div className='opacity-0'></div>
-}
+  );
+};
 
-export default Product
+export default Product;
