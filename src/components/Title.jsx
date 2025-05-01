@@ -5,7 +5,7 @@ const Title = ({ text1, text2 }) => {
     <div className="inline-flex items-center gap-4 mb-4 font-display">
       <h2 className="text-xl sm:text-2xl md:text-3xl text-[#7d6c58] tracking-wide">
         {text1}{' '}
-        <span className="text-gray-900 font-semibold">
+        <span className="text-[#1B1F2A] font-semibold">
           {text2}
         </span>
       </h2>

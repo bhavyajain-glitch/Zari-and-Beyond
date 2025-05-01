@@ -5,64 +5,118 @@ import { assets } from '../assets/frontend_assets/assets'
 import { ShopContext } from '../context/ShopContext'
 
 const PlaceOrder = () => {
-
- const [method,setMethod]=useState('cod')
-
- const {navigate} =useContext(ShopContext)
+  const [method, setMethod] = useState('cod')
+  const { navigate } = useContext(ShopContext)
 
   return (
-    <div className='flex flex-col sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t'>
-
-      <div className='flex flex-col gap-4 w-full sm:max-w-[480px]'>
-
-        <div  className='text-xl sm:text-2xl my-3'>
-          <Title text1="DELIVERY" text2="INFORMATION" />
+    <div className="pt-20 px-8 max-w-7xl mx-auto grid md:grid-cols-2 gap-16">
+      <div className="space-y-6">
+        <Title text1="DELIVERY" text2="INFORMATION" />
+        
+        <div className="grid grid-cols-2 gap-4">
+          <input 
+            type="text" 
+            placeholder="First Name" 
+            className="border-b border-gray-300 py-2 px-1 focus:outline-none focus:border-black" 
+          />
+          <input 
+            type="text" 
+            placeholder="Last Name" 
+            className="border-b border-gray-300 py-2 px-1 focus:outline-none focus:border-black" 
+          />
         </div>
-        <div className='flex gap-3'>
-          <input type="text" placeholder='First Name' className='border border-gray-300 rounded-md py-1.5 px-3.5 w-full' />
-          <input type="text" placeholder='Last Name' className='border border-gray-300 rounded-md py-1.5 px-3.5 w-full' />
+        
+        <input 
+          type="email" 
+          placeholder="Email address" 
+          className="w-full border-b border-gray-300 py-2 px-1 focus:outline-none focus:border-black" 
+        />
+        
+        <input 
+          type="text" 
+          placeholder="Street Address" 
+          className="w-full border-b border-gray-300 py-2 px-1 focus:outline-none focus:border-black" 
+        />
+        
+        <div className="grid grid-cols-2 gap-4">
+          <input 
+            type="text" 
+            placeholder="City" 
+            className="border-b border-gray-300 py-2 px-1 focus:outline-none focus:border-black" 
+          />
+          <input 
+            type="text" 
+            placeholder="State" 
+            className="border-b border-gray-300 py-2 px-1 focus:outline-none focus:border-black" 
+          />
         </div>
-        <input type="email" placeholder='Email address' className='border border-gray-300 rounded-md py-1.5 px-3.5 w-full' />
-        <input type="text" placeholder='Street' className='border border-gray-300 rounded-md py-1.5 px-3.5 w-full' />
-        <div className='flex gap-3'>
-          <input type="text" placeholder='City' className='border border-gray-300 rounded-md py-1.5 px-3.5 w-full' />
-          <input type="text" placeholder='State' className='border border-gray-300 rounded-md py-1.5 px-3.5 w-full' />
+        
+        <div className="grid grid-cols-2 gap-4">
+          <input 
+            type="text" 
+            placeholder="Zip Code" 
+            className="border-b border-gray-300 py-2 px-1 focus:outline-none focus:border-black" 
+          />
+          <input 
+            type="text" 
+            placeholder="Country" 
+            className="border-b border-gray-300 py-2 px-1 focus:outline-none focus:border-black" 
+          />
         </div>
-        <div className='flex gap-3'>
-          <input type="number" placeholder='Zipcode' className='border border-gray-300 rounded-md py-1.5 px-3.5 w-full' />
-          <input type="text" placeholder='Country' className='border border-gray-300 rounded-md py-1.5 px-3.5 w-full' />
-        </div>
-        <input type="number" placeholder='Phone ' className='border border-gray-300 rounded-md py-1.5 px-3.5 w-full' />
+        
+        <input 
+          type="tel" 
+          placeholder="Phone Number" 
+          className="w-full border-b border-gray-300 py-2 px-1 focus:outline-none focus:border-black" 
+        />
       </div>
 
-      <div className='mt-8'>
-
-        <div className='mt-8 min-w-80'>
-          <CartTotal /> 
+      <div className="space-y-8">
+        <div className="border-b pb-8">
+          <CartTotal />
         </div>
 
-        <div className='mt-12'>
-          <Title text1={'PAYMENT'} text2={'METHOD'} /> 
-
-          <div className='flex gap-3 flex-col lg:flex-row'>
-            <div onClick={()=>setMethod('strip')} className='flex items-center gap-3 border p-2 px-3 cursor-pointer'>
-              <p className={`min-w-3.5 h-3.5 border rounded-full ${method=='strip'?'bg-green-400':''}`}></p>
-              <img className='h-5 mx-4' src={assets.stripe_logo} alt="stripe" />
+        <div className="space-y-6">
+          <Title text1="PAYMENT" text2="METHOD" />
+          
+          <div className="space-y-3">
+            <div 
+              onClick={() => setMethod('strip')} 
+              className={`flex items-center gap-4 p-4 cursor-pointer border ${method === 'strip' ? 'border-black' : 'border-gray-200'}`}
+            >
+              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${method === 'strip' ? 'bg-black border-black' : 'border-gray-400'}`}>
+                {method === 'strip' && <div className="w-2 h-2 bg-white rounded-full"></div>}
+              </div>
+              <img className="h-5" src={assets.stripe_logo} alt="stripe" />
             </div>
-            <div onClick={()=>setMethod('razorpay')} className='flex items-center gap-3 border p-2 px-3 cursor-pointer'>
-              <p className={`min-w-3.5 h-3.5 border rounded-full ${method=='razorpay'?'bg-green-400':''}`}></p>
-              <img className='h-5 mx-4' src={assets.razorpay_logo} alt="razor pay" />
+            
+            <div 
+              onClick={() => setMethod('razorpay')} 
+              className={`flex items-center gap-4 p-4 cursor-pointer border ${method === 'razorpay' ? 'border-black' : 'border-gray-200'}`}
+            >
+              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${method === 'razorpay' ? 'bg-black border-black' : 'border-gray-400'}`}>
+                {method === 'razorpay' && <div className="w-2 h-2 bg-white rounded-full"></div>}
+              </div>
+              <img className="h-5" src={assets.razorpay_logo} alt="razorpay" />
             </div>
-            <div onClick={()=>setMethod('cod')} className='flex items-center gap-3 border p-2 px-3 cursor-pointer'>
-              <p className={`min-w-3.5 h-3.5 border rounded-full ${method=='cod'?'bg-green-400':''}`}></p>
-              <p className='text-gray-500 text-sm font-medium mx-4 '>Cash on Delivery</p>
+            
+            <div 
+              onClick={() => setMethod('cod')} 
+              className={`flex items-center gap-4 p-4 cursor-pointer border ${method === 'cod' ? 'border-black' : 'border-gray-200'}`}
+            >
+              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${method === 'cod' ? 'bg-black border-black' : 'border-gray-400'}`}>
+                {method === 'cod' && <div className="w-2 h-2 bg-white rounded-full"></div>}
+              </div>
+              <p className="text-gray-700">Cash on Delivery</p>
             </div>
           </div>
-          <div className='w-full text-end mt-8'>
-            <button onClick={()=>navigate('/orders')} className='bg-[#7d6c58] text-white px-4 py-2 rounded-md hover:bg-[#695b4a] transition-all duration-200'>Place Order</button>
-
-          </div>
-
+          
+          <button 
+            onClick={() => navigate('/orders')} 
+            className="w-full bg-[#7d6c58] text-white py-3 hover:bg-gray-800 transition-colors"
+          >
+            PLACE ORDER
+          </button>
         </div>
       </div>
     </div>

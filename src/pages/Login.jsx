@@ -1,30 +1,76 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Title from '../components/Title';
 
 const Login = () => {
-  const [currentState, setCurrentState]  = useState('Login')
-  const onSubmitHandler = async(event)=>{
-    event.preventDefault()
-  }
-  return (
-    <form onSubmit={onSubmitHandler} className='flex flex-col items-center w-[90%] sm:max-w-96 m-auto mt-14 gap-4 text-gray-800'>
-      <div className='inline-flex items-center gap-2 mb-2 mt-10'>
-        <p className='prata-regular text-3xl text-gray-900'>{currentState}</p>
-        <hr className='border-none h-[1.5px] w-8 bg-gray-900' />
-      </div>
-      {currentState === 'Login'? '' :<input type='text' className='w-full px-3 py-2 border border-gray-800' placeholder='Name' />}
-      <input type='email' className='w-full px-3 py-2 border border-gray-800' placeholder='Email' />
-      <input type='password' className='w-full px-3 py-2 border border-gray-800' placeholder='Password' />
-      <div className='w-full flex justify-between text-sm mt-[-2%]'>
-        <p className='text-gray-500 cursor-pointer'>Forgot Password?</p>
-        {
-          currentState === 'Login' ? 
-          <p onClick={() => setCurrentState('Sign Up')} className='text-gray-500 cursor-pointer'>Create an account</p> : 
-          <p onClick={() => setCurrentState('Login')} className='text-gray-500 cursor-pointer'>Already have an account?</p>
-        }
-      </div>
-      <button className='bg-[#7d6c58] text-white font-light px-8 py-2 mt-4'>{currentState === 'Login'? 'Sign In' : 'Sign Up'}</button>
-    </form>
-  )
-}
+  const [currentState, setCurrentState] = useState('Login');
+  const navigate = useNavigate();
+  
+  const onSubmitHandler = async (event) => {
+    event.preventDefault();
+    // Here you would typically handle authentication
+    // For demo purposes, we'll redirect immediately
+    navigate('/'); // Redirect to home page
+  };
 
-export default Login
+  return (
+    <div className="pt-20 px-8 max-w-7xl mx-auto flex justify-center">
+      <form onSubmit={onSubmitHandler} className="w-full max-w-md space-y-6">
+        <div className="text-center mb-10">
+          <Title 
+            text1={currentState === 'Login' ? 'ACCOUNT' : 'CREATE'} 
+            text2={currentState === 'Login' ? 'LOGIN' : 'ACCOUNT'} 
+          />
+        </div>
+
+        {currentState === 'Sign Up' && (
+          <input 
+            type="text" 
+            className="w-full border-b border-gray-300 py-3 px-1 focus:outline-none focus:border-black" 
+            placeholder="Full Name" 
+            required
+          />
+        )}
+
+        <input 
+          type="email" 
+          className="w-full border-b border-gray-300 py-3 px-1 focus:outline-none focus:border-black" 
+          placeholder="Email Address" 
+          required
+        />
+
+        <input 
+          type="password" 
+          className="w-full border-b border-gray-300 py-3 px-1 focus:outline-none focus:border-black" 
+          placeholder="Password" 
+          required
+        />
+
+        <div className="flex justify-between text-sm pt-2">
+          {currentState === 'Login' && (
+            <button type="button" className="text-gray-500 hover:text-black">
+              Forgot Password?
+            </button>
+          )}
+          
+          <button 
+            type="button" 
+            onClick={() => setCurrentState(currentState === 'Login' ? 'Sign Up' : 'Login')}
+            className="text-gray-500 hover:text-black"
+          >
+            {currentState === 'Login' ? 'Create an account' : 'Already have an account?'}
+          </button>
+        </div>
+
+        <button 
+          type="submit" 
+          className="w-full bg-black text-white py-4 hover:bg-gray-800 transition-colors uppercase tracking-wider"
+        >
+          {currentState === 'Login' ? 'Sign In' : 'Sign Up'}
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default Login;
