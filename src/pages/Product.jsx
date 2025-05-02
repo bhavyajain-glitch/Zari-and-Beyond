@@ -11,12 +11,17 @@ const Product = () => {
   const [image, setImage] = useState('');
   const [size, setSize] = useState('');
   const [error, setError] = useState('');
+  const [addedToCart, setAddedToCart] = useState(false);
 
   useEffect(() => {
     const product = products.find(item => item._id === productId);
     if (product) {
       setProductData(product);
       setImage(product.image[0]);
+      setSize('');
+      setError('');
+      setAddedToCart(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [productId, products]);
 
@@ -96,6 +101,8 @@ const Product = () => {
               } else {
                 addToCart(productData._id, size);
                 setError('');
+                setAddedToCart(true);
+                setTimeout(() => setAddedToCart(false), 2000);
               }
             }}
             className="w-full md:w-auto bg-black text-white px-8 py-3 rounded-none hover:bg-gray-800 transition-all uppercase text-sm tracking-wider mb-2"
@@ -103,6 +110,7 @@ const Product = () => {
             Add to Cart
           </button>
 
+          {addedToCart && <p className="text-green-600 text-sm mt-2">Added to Cart!</p>}
           {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
 
           {/* Extra Info */}
